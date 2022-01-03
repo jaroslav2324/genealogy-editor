@@ -1,10 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit'
-import { treeReducer } from './reducers/treeReducer';
+import { characterReducer } from './reducers/characterReducer';
+import { linksReducer } from './reducers/linkReducer';
 
 
 export const store = configureStore({
     reducer:{
-        tree:treeReducer
+        links:linksReducer,
+        characters:characterReducer
     }
 })
 

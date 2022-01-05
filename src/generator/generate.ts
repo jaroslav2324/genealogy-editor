@@ -60,7 +60,7 @@ const DEFAULT_PARAMS = {
     LIVESPAN_DEFFERENCE_KOEF    :0.5,
     SECANDARY_DYNASTIES_LIMIT   :2,
     MAX_RANDOM_NUM              :1447649678,
-    DEBUG                       :0
+    DEBUG                       :1
 }
 interface IGenData{
     idCounter                   :number;
@@ -114,13 +114,13 @@ class Generator implements IGenData{
         } 
         Object.assign(this,nameTemplate);
     }
-    private IPersonFactory(name:string, surname:string, patronymic:string, birth:TimelineDate, death:null | TimelineDate, _awaitedCildCount: number,isMale:boolean = Boolean(this._randint() % 2)):IPerson{
-        const id = this.dynasty === surname?0:this.dynastys.findIndex(v=>v === surname)
+    private IPersonFactory(name:string, surname:string, patronymic:string, birth:TimelineDate, death:null | TimelineDate, arrayOfLines: Array<{id: string, name: string, description: string}>, _awaitedCildCount: number,isMale:boolean = Boolean(this._randint() % 2)):IPerson{
+        const id = this.dynasty === surname?0:this.dynastys.findIndex(v=>v === surname)+1
         return {
             name,surname,patronymic,birth,death,
             _awaitedCildCount,isMale,
             id:new Id(id,this.idCounter++),
-            childCount:0
+            childCount:0, arrayOfLines
         }
     }
     private _createChildTimelineDate(parentBirth: TimelineDate[]):TimelineDate{
@@ -199,7 +199,7 @@ class Generator implements IGenData{
             const name       = this.nameGen.toString(this._pseudorandom());
             const surname    = this.dynasty;
             const patronymic = this.nameGen.toString(this._pseudorandom())
-            const founder = this.IPersonFactory(name,surname, patronymic, this.foundingDate, null,this._randint() % 3 + 1)
+            const founder = this.IPersonFactory(name,surname, patronymic, this.foundingDate, null, [], this._randint() % 3 + 1)
             founder.death = this._createDeathTimelineDate(founder);
             this.characters.add(founder);
             this.options.DEBUG && this._logChararacterData(founder,"founder");
@@ -212,7 +212,7 @@ class Generator implements IGenData{
             const name       = this.nameGen.toString(this._pseudorandom());
             const surname    = this._getSecondaryDynasty();
             const patronymic = this.nameGen.toString(this._pseudorandom())
-            const wifu = this.IPersonFactory(name,surname, patronymic,this._createPeerTimlineDate(person.birth),null,0,!person.isMale)
+            const wifu = this.IPersonFactory(name,surname, patronymic,this._createPeerTimlineDate(person.birth),null,[],0,!person.isMale)
             wifu.death = this._createDeathTimelineDate(wifu);
             this.characters.add(wifu);
             this.links.push({from:person.id,to:wifu.id,type:"merried"});
@@ -225,7 +225,7 @@ class Generator implements IGenData{
         const name    = this.nameGen.toString(this._pseudorandom());
         const surname = this.dynasty;
         const patronymic = person.name;
-        const child = this.IPersonFactory(name,surname, patronymic,this._createChildTimelineDate([person.birth,wifu.birth]),null,this._randint() % 3 + 1)
+        const child = this.IPersonFactory(name,surname, patronymic,this._createChildTimelineDate([person.birth,wifu.birth]),null,[],this._randint() % 3 + 1)
 
         child.death = this._createDeathTimelineDate(child);
         this.characters.add(child);

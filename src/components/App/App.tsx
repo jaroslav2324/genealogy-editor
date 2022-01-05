@@ -1,7 +1,7 @@
 import { Provider } from "react-redux";
 import { store } from "../../storage/store";
 import TreeEditor from "../TreeEditor/TreeEditor";
-import CharacterRedactor from "../CharacterRedactor/CharacterReductor";
+import CharacterRedactor from "../CharacterRedactor/CharacterRedactor";
 import "./App.css";
 
 function App() {

@@ -3,82 +3,65 @@ import TimelineDate from "../../types/TimelineDate";
 import "./Characteristics.css";
 import IPerson from "../../types/interfaces/IPerson";
 import FieldCharacteristic from "../ui/FieldCharacteristic/FieldCharacteristic";
-import Id from "../../types/Id";
 
-/* нужно переместить*/
-export type OnChangeFunction = (e: React.ChangeEvent<HTMLInputElement>) => void;
-
-function Characteristics(props: { isEditing: boolean }) {
-  /* начальную инициализацию нужно изменить при загрузке персонажа*/
-  const [person, setPerson] = useState<IPerson>({
-    isMale: true,
-    name: "name",
-    surname: "surname",
-    patronymic: "patronymic",
-    birth: new TimelineDate(0, 0, 0, 0, 0, 0),
-    death: new TimelineDate(0, 0, 0, 0, 0, 0),
-    childCount: 0,
-    id: new Id(0),
-    _awaitedCildCount: 0,
-  });
-
-  let isEditing = props.isEditing;
-
+function Characteristics(props: {isEditing: boolean, person: IPerson, setPerson: React.Dispatch<React.SetStateAction<IPerson | undefined>>}) {
+ 
+ 
   return (
     <div style={{ display: "grid" }}>
       <FieldCharacteristic
         fieldName={"Name: "}
-        isEditing={isEditing}
+        isEditing={props.isEditing}
         handleChange={(e) => {
-          setPerson({ ...person, name: e.target.value });
+          props.setPerson({ ...props.person, name: e.target.value });
         }}
-        showString={person.name}
+        showString={props.person.name}
       />
       <FieldCharacteristic
         fieldName={"Surname: "}
-        isEditing={isEditing}
+        isEditing={props.isEditing}
         handleChange={(e) => {
-          setPerson({ ...person, surname: e.target.value });
+          props.setPerson({ ...props.person, surname: e.target.value });
         }}
-        showString={person.surname}
+        showString={props.person.surname}
       />
       <FieldCharacteristic
         fieldName={"Patronymic: "}
-        isEditing={isEditing}
+        isEditing={props.isEditing}
         handleChange={(e) => {
-          setPerson({ ...person, patronymic: e.target.value });
+          props.setPerson({ ...props.person, patronymic: e.target.value });
         }}
-        showString={person.patronymic}
+        showString={props.person.patronymic}
       />
       <FieldCharacteristic
         fieldName={"Birth Date: "}
-        isEditing={isEditing}
+        isEditing={props.isEditing}
         handleChange={(e) => {
           let obj = new TimelineDate(0, 0, 0, 0, 0, 0);
-          Object.assign(obj, person.birth);
+          Object.assign(obj, props.person.birth);
           TimelineDate.changeDateString(obj, e.target.value);
-          setPerson({ ...person, birth: obj });
+          props.setPerson({ ...props.person, birth: obj });
         }}
-        showString={TimelineDate.returnDateAsString(person.birth)}
+        showString={TimelineDate.returnDateAsString(props.person.birth)}
       />
       <FieldCharacteristic
         fieldName={"Death Date: "}
-        isEditing={isEditing}
+        isEditing={props.isEditing}
         handleChange={(e) => {
           if (e.target.value.length > 0) {
             let obj = new TimelineDate(0, 0, 0, 0, 0, 0);
-            if (typeof person.death == "object") {
-              Object.assign(obj, person.death);
+            if (typeof props.person.death == "object") {
+              Object.assign(obj, props.person.death);
             }
             TimelineDate.changeDateString(obj, e.target.value);
-            setPerson({ ...person, death: obj });
+            props.setPerson({ ...props.person, death: obj });
           } else {
-            setPerson({ ...person, death: null });
+            props.setPerson({ ...props.person, death: null });
           }
         }}
         showString={
-          person.death
-            ? TimelineDate.returnDateAsString(person.death)
+          props.person.death
+            ? TimelineDate.returnDateAsString(props.person.death)
             : "not dead yet"
         }
       />

@@ -114,7 +114,7 @@ class Generator implements IGenData{
         } 
         Object.assign(this,nameTemplate);
     }
-    private IPersonFactory(name:string, surname:string, patronymic:string, birth:TimelineDate, death:null | TimelineDate, arrayOfLines: Array<{id: string, name: string, description: string}>, _awaitedCildCount: number,isMale:boolean = Boolean(this._randint() % 2)):IPerson{
+    private IPersonFactory(name:string, surname:string, patronymic:string, birth:TimelineDate, death:null | TimelineDate, arrayOfLines: Array<{id: number, name: string, description: string}>, _awaitedCildCount: number,isMale:boolean = Boolean(this._randint() % 2)):IPerson{
         const id = this.dynasty === surname?0:this.dynastys.findIndex(v=>v === surname)+1
         return {
             name,surname,patronymic,birth,death,

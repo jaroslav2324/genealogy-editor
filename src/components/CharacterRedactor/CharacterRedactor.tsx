@@ -60,19 +60,32 @@ function CharacterRedactor() {
       setText("Save");
     }
   };
-
+/* добавление записей в массив записей о персонаже*/
   const linesArrAddHandler = () => {
+    let id: number;
+    while(true){
+      /*Можно заменить максимальное значение количества записей */
+      id = Math.floor(Math.random() * 100000)
+      console.log(id);
+      let stop = true;
+    person.arrayOfLines.find((line) => {if (line.id === id){stop = false}})
+    if(stop){
+      break;
+    }
+    }
     setPerson({
       ...person,
       arrayOfLines: [
         ...person.arrayOfLines,
         {
-          id: new Date().getDate().toString(),
+          id: id,
           name: "Name",
           description: "description",
         },
       ],
     });
+    dispatch({type: "UpdateCharacter", payload: person});
+    console.log(person)
   };
 
   return isOpen ? (
@@ -106,6 +119,7 @@ function CharacterRedactor() {
         />
       </div>
       <div>
+        {/*console.log(person.arrayOfLines)*/}
         {person.arrayOfLines.map((line) => {
           const { id, name, description } = line;
           return (
@@ -131,7 +145,7 @@ export default CharacterRedactor;
 /*Запись о пресонаже. Можно редактировать*/
 function LineEdit(props: {
   isEditing: boolean;
-  id: string;
+  id: number;
   lineName: string;
   description: string;
   person: IPerson;
@@ -139,6 +153,7 @@ function LineEdit(props: {
 }) {
   const [lineName, setLineName] = useState(props.lineName);
   const [description, setDescription] = useState(props.description);
+  const dispatch = useTypedDispatch();
   return props.isEditing ? (
     <div
       key={props.id}
@@ -154,27 +169,41 @@ function LineEdit(props: {
           defaultValue={lineName}
           onChange={(e) => {
             setLineName(e.target.value);
-            props.setPerson({
+            let arrWithChangedPerson = props.person.arrayOfLines.filter((line) => {if (props.id !== line.id){return line}})
+            let lineToChange = props.person.arrayOfLines.find((line) => {if (props.id === line.id){return line}})
+            if (lineToChange){
+            lineToChange.name = e.target.value}
+            else{lineToChange = {id: props.id, name: props.lineName, description: props.description}}
+            arrWithChangedPerson.push(lineToChange);
+            dispatch({ type: "UpdateCharacter", payload: {...props.person, arrayOfLines: arrWithChangedPerson} });
+            /*props.setPerson({
               ...props.person,
               arrayOfLines: [
                 ...props.person.arrayOfLines,
                 { id: props.id, name: lineName, description: description },
               ],
             });
-          }}
+          */}}
         />
         <input
           defaultValue={props.description}
           onChange={(e) => {
             setDescription(e.target.value);
-            props.setPerson({
+            let arrWithChangedPerson = props.person.arrayOfLines.filter((line) => {if (props.id !== line.id){return line}})
+            let lineToChange = props.person.arrayOfLines.find((line) => {if (props.id === line.id){return line}})
+            if (lineToChange){
+            lineToChange.description = e.target.value}
+            else{lineToChange = {id: props.id, name: props.lineName, description: props.description}}
+            arrWithChangedPerson.push(lineToChange);
+            dispatch({ type: "UpdateCharacter", payload: {...props.person, arrayOfLines: arrWithChangedPerson} });
+            /*props.setPerson({
               ...props.person,
               arrayOfLines: [
                 ...props.person.arrayOfLines,
                 { id: props.id, name: lineName, description: description },
               ],
             });
-          }}
+          */}}
         />
       </div>
       <button

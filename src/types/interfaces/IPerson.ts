@@ -10,7 +10,7 @@ interface IPerson {
     death                       :TimelineDate | null;
     childCount                  :number;
 
-    arrayOfLines: {id: string, name: string, description: string}[]; /*массив записей о пресонаже*/ 
+    arrayOfLines: {id: number, name: string, description: string}[]; /*массив записей о пресонаже*/ 
     
     id                          :Id;
     _awaitedCildCount           :number,
